@@ -56,6 +56,9 @@ void MainWindow::init()
     connect(chatBox_,SIGNAL(signalNewText(const QString&)),this,SLOT(slotSend(const QString&)));
     connect(this,SIGNAL(signalNewText(const QString&)),this,SLOT(slotAddText(const QString&)));
     connect(this, SIGNAL(signalNewText(const QString&)),this,SLOT(slotSend(const QString&)));
+
+    connect(&sock_,SIGNAL(connected()),this,SLOT(slotConnected()));
+
     sendBtn_->setFixedSize(70,50);
     initMenu();
 }
@@ -108,15 +111,20 @@ void MainWindow::connectToServer()
 {
     slotAddText("Connecting to server...");
     sock_.connectToHost(host_, port_);
-    connect(&sock_,SIGNAL(connected()),this,SLOT(slotConnected()));
     if(!sock_.waitForConnected(3000))
         slotAddText("Couldn't reach server");
-    connect(&sock_,SIGNAL(readyRead()),this,SLOT(slotIncomingText()));
+    else
+    {
+        connect(&sock_,SIGNAL(readyRead()),this,SLOT(slotIncomingText()));
+    }
 }
 
 void MainWindow::disconnectFromServer()
 {
+    slotAddText("Disconecting...");
     sock_.disconnectFromHost();
+    if (sock_.waitForDisconnected(3000))
+        slotAddText("Disconned from server");
 }
 
 void MainWindow::slotIncomingText()
@@ -140,16 +148,25 @@ void MainWindow::keyPressEvent(QKeyEvent *e)
 void MainWindow::slotSettings()
 {
     bool ok;
-    QString text = QInputDialog::getText(this, tr("Server settings"),
+    QString text = QInputDialog::getText(this, tr("Enter server address"),
                                               tr("Server Address:"), QLineEdit::Normal,
-                                              "127.0.0.1", &ok);
+                                              host_, &ok);
     if (ok && !text.isEmpty())
     {
-        disconnectFromServer();
         host_ = text;
-        connectToServer();
+    }
+    ok = false;
+    text.clear();
+    text = QInputDialog::getText(this, tr("Enter server port"),
+                                              tr("Port:"), QLineEdit::Normal,
+                                              QString::number(port_), &ok);
+    if (ok && !text.isEmpty())
+    {
+        port_ = text.toInt();
     }
 
+    disconnectFromServer();
+    connectToServer();
 }
 
 void MainWindow::slotAbout()
