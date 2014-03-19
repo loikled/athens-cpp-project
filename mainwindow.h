@@ -20,7 +20,6 @@ private:
     ProtocolHandler protocolhandler_;
     QString host_;
     QString port_;
-    QString nickname_;
 
 public:
     MainWindow(QWidget *parent = 0);

@@ -18,11 +18,13 @@ SOURCES += main.cpp\
     protocolhandler.cpp \
     packet.cpp \
     packetnick.cpp \
-    packetjoin.cpp
+    packetjoin.cpp \
+    packetmessage.cpp
 
 HEADERS  += mainwindow.h \
     mytextedit.h \
     protocolhandler.h \
     packet.h \
     packetnick.h \
-    packetjoin.h
+    packetjoin.h \
+    packetmessage.h

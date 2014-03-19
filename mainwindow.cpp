@@ -18,8 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
       chatBox_(0),
       sendBtn_(0),
       host_("192.168.10.118"),
-      port_("12345"),
-      nickname_("Loki")
+      port_("12345")
 {
     init();
 }

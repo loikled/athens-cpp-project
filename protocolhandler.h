@@ -14,6 +14,8 @@ private:
     QTcpSocket sock_;
     QString host_;
     QString port_;
+    QString nickname_;
+    QString currentChan_;
 
 public:
     explicit ProtocolHandler(QObject *parent = 0);

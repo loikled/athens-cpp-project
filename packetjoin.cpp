@@ -13,5 +13,5 @@ const char * PacketJoin::getPayload()
 
 int PacketJoin::payloadSize()
 {
-    return channel_.size() +1;
+    return channel_.size()+1;
 }

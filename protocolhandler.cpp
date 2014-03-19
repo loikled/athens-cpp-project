@@ -2,6 +2,7 @@
 #include "protocolhandler.h"
 #include "packetnick.h"
 #include "packetjoin.h"
+#include "packetmessage.h"
 
 ProtocolHandler::ProtocolHandler(QObject *parent) :
     QObject(parent)
@@ -38,6 +39,9 @@ void ProtocolHandler::sendMessage(const QString& mess)
         stream<<pack;
         qDebug()<<"raw Packet: "<<array;
         sock_ << pack;
+
+        //if (acknolged()
+        nickname_ = nick;
     }
     else if (mess.contains("/join"))
     {
@@ -50,6 +54,12 @@ void ProtocolHandler::sendMessage(const QString& mess)
         stream<<pack;
         qDebug()<<"raw Packet: "<<array;
         sock_ << pack;
+        currentChan_ = channel;
+    }
+    else
+    {
+        PacketMessage pack(nickname_,currentChan_,mess);
+        sock_<<pack;
     }
 }
 
