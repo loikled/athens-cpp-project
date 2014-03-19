@@ -109,6 +109,14 @@ void MainWindow::connectToServer()
     slotAddText("Connected");
 }
 
+void MainWindow::connectDefaults()
+{
+    protocolhandler_.setHostAndPort(host_,port_);
+    connectToServer();
+    emit signalNewText("/nick loki");
+    emit signalNewText("/join #public");
+}
+
 void MainWindow::disconnectFromServer()
 {
     slotAddText("Disconecting...");

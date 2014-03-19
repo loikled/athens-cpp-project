@@ -25,6 +25,7 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void keyPressEvent(QKeyEvent *e);
+    void connectDefaults();
 
 private:
     void init();
