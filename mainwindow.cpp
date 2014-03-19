@@ -17,8 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
       chatView_(0),
       chatBox_(0),
       sendBtn_(0),
-      host_("127.0.0.1"),
-      port_(12345),
+      host_("192.168.10.118"),
+      port_("12345"),
       nickname_("Loki")
 {
     init();
@@ -57,7 +57,7 @@ void MainWindow::init()
     connect(this,SIGNAL(signalNewText(const QString&)),this,SLOT(slotAddText(const QString&)));
     connect(this, SIGNAL(signalNewText(const QString&)),this,SLOT(slotSend(const QString&)));
 
-    connect(&sock_,SIGNAL(connected()),this,SLOT(slotConnected()));
+    connect(&protocolhandler_,SIGNAL(connected()),this,SLOT(slotConnected()));
 
     sendBtn_->setFixedSize(70,50);
     initMenu();
@@ -93,11 +93,7 @@ void MainWindow::slotAddText(const QString& text)
 
 void MainWindow::slotSend(const QString& text)
 {
-    if (sock_.state() == QAbstractSocket::ConnectedState )
-    {
-        QString res = text + QString("\n");
-        sock_.write(res.toLocal8Bit(),res.size());
-    }
+    protocolhandler_.sendMessage(text);
 }
 
 void MainWindow::slotBtnSend()
@@ -110,30 +106,21 @@ void MainWindow::slotBtnSend()
 void MainWindow::connectToServer()
 {
     slotAddText("Connecting to server...");
-    sock_.connectToHost(host_, port_);
-    if(!sock_.waitForConnected(3000))
-        slotAddText("Couldn't reach server");
-    else
-    {
-        connect(&sock_,SIGNAL(readyRead()),this,SLOT(slotIncomingText()));
-    }
+    protocolhandler_.connectToServer();
+    slotAddText("Connected");
 }
 
 void MainWindow::disconnectFromServer()
 {
     slotAddText("Disconecting...");
-    sock_.disconnectFromHost();
-    if (sock_.waitForDisconnected(3000))
-        slotAddText("Disconned from server");
+    protocolhandler_.disconnectFromServer();
+    slotAddText("Disconnected");
 }
 
 void MainWindow::slotIncomingText()
 {
-    if (sock_.canReadLine() )
-    {
-        QString line = sock_.readLine();
-        slotAddText(line);
-    }
+   QString line = protocolhandler_.getTextMsg();
+   slotAddText(line);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *e)
@@ -159,12 +146,12 @@ void MainWindow::slotSettings()
     text.clear();
     text = QInputDialog::getText(this, tr("Enter server port"),
                                               tr("Port:"), QLineEdit::Normal,
-                                              QString::number(port_), &ok);
+                                              port_, &ok);
     if (ok && !text.isEmpty())
     {
-        port_ = text.toInt();
+        port_ = text;
     }
-
+    protocolhandler_.setHostAndPort(host_, port_);
     disconnectFromServer();
     connectToServer();
 }
