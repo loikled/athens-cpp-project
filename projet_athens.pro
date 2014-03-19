@@ -14,7 +14,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    mytextedit.cpp
+    mytextedit.cpp \
+    protocolhandler.cpp \
+    packet.cpp \
+    packetnick.cpp
 
 HEADERS  += mainwindow.h \
-    mytextedit.h
+    mytextedit.h \
+    protocolhandler.h \
+    packet.h \
+    packetnick.h

@@ -3,9 +3,9 @@
 
 #include <QMainWindow>
 #include <QKeyEvent>
-#include <QTcpSocket>
 
 #include "mytextedit.h"
+#include "protocolhandler.h"
 
 class QPushButton;
 class QTextEdit;
@@ -17,15 +17,16 @@ private:
     QTextEdit* chatView_;
     MyTextEdit* chatBox_;
     QPushButton* sendBtn_;
-    QTcpSocket sock_;
+    ProtocolHandler protocolhandler_;
     QString host_;
-    int port_;
+    QString port_;
     QString nickname_;
 
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void keyPressEvent(QKeyEvent *e);
+
 private:
     void init();
     void connectToServer();
