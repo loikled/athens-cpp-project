@@ -1,7 +1,7 @@
 #include "packetjoin.h"
 
-PacketJoin:: PacketJoin(const QString& channel, PacketType_t type)
-    : Packet(type),
+PacketJoin:: PacketJoin(const QString& channel)
+    : Packet(JOIN),
       channel_(channel)
 {
 }

@@ -11,6 +11,7 @@
 #include <QMenuBar>
 #include <QInputDialog>
 #include <QLineEdit>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -18,7 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
       chatBox_(0),
       sendBtn_(0),
       host_("192.168.10.118"),
-      port_("12345")
+      port_("12345"),
+      connected_(false)
 {
     init();
 }
@@ -36,6 +38,7 @@ void MainWindow::init()
     vlayout->addWidget(chatView_);
 
     chatView_->setReadOnly(true);
+    chatView_->setStyleSheet("background: transparent url(background.jpg) no-repeat;");
 
     QWidget *textzone = new QWidget();
     QHBoxLayout* hlayout = new QHBoxLayout;
@@ -51,12 +54,13 @@ void MainWindow::init()
     centralw->setLayout(vlayout);
     setCentralWidget(centralw);
     connect(sendBtn_,SIGNAL(clicked()),this,SLOT(slotBtnSend()));
-    connect(chatBox_,SIGNAL(signalNewText(const QString&)),this,SLOT(slotAddText(const QString&)));
+    //sconnect(chatBox_,SIGNAL(signalNewText(const QString&)),this,SLOT(slotAddText(const QString&)));
     connect(chatBox_,SIGNAL(signalNewText(const QString&)),this,SLOT(slotSend(const QString&)));
     connect(this,SIGNAL(signalNewText(const QString&)),this,SLOT(slotAddText(const QString&)));
     connect(this, SIGNAL(signalNewText(const QString&)),this,SLOT(slotSend(const QString&)));
 
     connect(&protocolhandler_,SIGNAL(connected()),this,SLOT(slotConnected()));
+    connect(&protocolhandler_, SIGNAL(NewMessage(QString)),this,SLOT(slotAddText(QString)));
 
     sendBtn_->setFixedSize(70,50);
     initMenu();
@@ -92,7 +96,14 @@ void MainWindow::slotAddText(const QString& text)
 
 void MainWindow::slotSend(const QString& text)
 {
-    protocolhandler_.sendMessage(text);
+    if(text.size()>0 && text != "\n")
+        buffer_.append(text);
+    if(connected_ && buffer_.size() > 0)
+    {
+        QString firstmess = buffer_[0];
+        buffer_.pop_front();
+        protocolhandler_.sendMessage(firstmess);
+    }
 }
 
 void MainWindow::slotBtnSend()
@@ -106,7 +117,6 @@ void MainWindow::connectToServer()
 {
     slotAddText("Connecting to server...");
     protocolhandler_.connectToServer();
-    slotAddText("Connected");
 }
 
 void MainWindow::connectDefaults()
@@ -122,6 +132,7 @@ void MainWindow::disconnectFromServer()
     slotAddText("Disconecting...");
     protocolhandler_.disconnectFromServer();
     slotAddText("Disconnected");
+    connected_ = false;
 }
 
 void MainWindow::slotIncomingText()
@@ -158,9 +169,9 @@ void MainWindow::slotSettings()
     {
         port_ = text;
     }
-    protocolhandler_.setHostAndPort(host_, port_);
+
     disconnectFromServer();
-    connectToServer();
+    connectDefaults();
 }
 
 void MainWindow::slotAbout()
@@ -181,4 +192,10 @@ void MainWindow::slotAbout()
 void MainWindow::slotConnected()
 {
     slotAddText("Connection successfull");
+    connected_ = true;
+
+    //send what has been kept when not connected
+    int size = buffer_.size();
+    for (int i=0; i<size; i++)
+        slotSend(""); // flush the buffer
 }

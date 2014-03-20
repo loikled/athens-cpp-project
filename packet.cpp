@@ -35,6 +35,40 @@ void Packet::getHeader(QDataStream& stream)
     stream<<header_.head_checksum;
 }
 
+void Packet::setHeader(QDataStream& stream)
+{
+    quint32 length;
+    stream>>length;
+    quint32 type;
+    stream>>type;
+
+    quint16 bd_chk;
+    stream>>bd_chk;
+
+    quint16 hd_chk;
+    stream>>hd_chk;
+    header_.length = length;
+    header_.type = type;
+    header_.body_checksum = bd_chk;
+    header_.head_checksum = hd_chk;
+}
+
+ void Packet::setHeader(message_header_t h)
+ {
+    header_ = h;
+ }
+
+ bool Packet::checkHeader()
+ {
+     bool ok = false;
+     quint16 headerChecksum = header_.head_checksum;
+     header_.head_checksum = 0;
+     quint16 hchk = fletcher16((quint8*)&header_,HEADER_LENGTH);
+     ok = hchk == headerChecksum;
+     header_.head_checksum = headerChecksum;
+     return ok;
+ }
+
 QDataStream& operator<<(QDataStream& stream, Packet& pack)
 {
     pack.build();
@@ -51,6 +85,12 @@ QTcpSocket& operator<<(QTcpSocket& sock, Packet& pack)
     return sock;
 }
 
+QDataStream& operator>>(QDataStream& stream, Packet& pack)
+{
+    pack.getHeader(stream);
+    return stream;
+}
+
 void Packet::build()
 {
     header_.body_checksum = 0;
@@ -60,3 +100,4 @@ void Packet::build()
     header_.body_checksum = fletcher16((quint8*)getPayload(),payloadSize());
     header_.head_checksum = fletcher16((quint8*)&header_,12);
 }
+

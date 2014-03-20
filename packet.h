@@ -39,6 +39,9 @@ public:
     void build();
     friend QDataStream& operator<<(QDataStream& stream, Packet& pack);
     friend QTcpSocket& operator<<(QTcpSocket& sock, Packet& pack);
+
+    friend QDataStream& operator>>(QDataStream& stream, Packet& pack);
+
     quint32 getLength();
     quint32 getType();
 
@@ -46,6 +49,9 @@ public:
     virtual const char* getPayload() = 0;
 
     void getHeader(QDataStream& stream);
+    void setHeader(QDataStream& stream);
+    void setHeader(message_header_t h);
+    bool checkHeader();
     /* source : http://en.wikipedia.org/wiki/Fletcher%27s_checksum */
     inline  quint16 fletcher16(quint8* data, int count) {
         qint16 sum1 = 0;

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTcpSocket>
 #include <QString>
+#include <QTimer>
 
 #include "packet.h"
 
@@ -16,6 +17,9 @@ private:
     QString port_;
     QString nickname_;
     QString currentChan_;
+    QTimer timer_;
+    QByteArray inBuf_;
+    bool registered_;
 
 public:
     explicit ProtocolHandler(QObject *parent = 0);
@@ -23,7 +27,10 @@ public:
     void connectToServer();
     void disconnectFromServer();
     void sendMessage(const QString& mess);
-    const QString& getTextMsg();
+    QString getTextMsg();
+
+private:
+    void sendPacket(Packet& packet);
 
 signals:
     void connected();
@@ -31,6 +38,7 @@ signals:
 
 public slots:
     void slotConnected();
+    void slotRead();
 
 };
 

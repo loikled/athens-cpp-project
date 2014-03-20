@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     packet.cpp \
     packetnick.cpp \
     packetjoin.cpp \
-    packetmessage.cpp
+    packetmessage.cpp \
+    packetacknick.cpp
 
 HEADERS  += mainwindow.h \
     mytextedit.h \
@@ -27,4 +28,5 @@ HEADERS  += mainwindow.h \
     packet.h \
     packetnick.h \
     packetjoin.h \
-    packetmessage.h
+    packetmessage.h \
+    packetacknick.h

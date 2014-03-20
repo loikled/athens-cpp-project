@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QKeyEvent>
+#include <QStringList>
 
 #include "mytextedit.h"
 #include "protocolhandler.h"
@@ -20,6 +21,8 @@ private:
     ProtocolHandler protocolhandler_;
     QString host_;
     QString port_;
+    bool connected_;
+    QStringList buffer_;
 
 public:
     MainWindow(QWidget *parent = 0);

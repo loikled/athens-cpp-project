@@ -1,7 +1,7 @@
 #include "packetnick.h"
 
-PacketNick:: PacketNick(const QString& nick, PacketType_t type)
-    : Packet(type),
+PacketNick:: PacketNick(const QString& nick)
+    : Packet(CHANGE_NICK),
       nick_(nick)
 {
 }
