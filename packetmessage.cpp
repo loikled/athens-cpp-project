@@ -35,29 +35,12 @@ int PacketMessage::payloadSize()
 
 void PacketMessage::setPayload(char* payload)
 {
-    QString from;
-    QString to;
-    QString mess;
-    quint32 size = header_.length - HEADER_LENGTH;
-    quint32 i = 0;
-    char current_char = payload[0];
-    while (i<size && current_char != 0)
-    {
-        from.append(current_char);
-        current_char = payload[++i];
-    }
-    current_char = payload[++i];
-    while (i<size && current_char != 0)
-    {
-        to.append(current_char);
-        current_char = payload[++i];
-    }
-    current_char = payload[++i];
-    while (i<size && current_char != 0)
-    {
-        mess.append(current_char);
-        current_char = payload[++i];
-    }
+    char * cursor = payload;
+    QString from = getArg(cursor);
+    cursor+=from.size();
+    QString to = getArg(cursor);
+    cursor+= to.size();
+    QString mess = getArg(cursor);
     from_ = from;
     mess_ = mess;
 }

@@ -26,21 +26,11 @@ void PacketAckNick::setPayload(char* payload)
 {
     QString nick;
     QString ack;
-    quint32 size = header_.length - HEADER_LENGTH;
-    quint32 i = 0;
-    char current_char = payload[0];
-    while (i<size && current_char != 0)
-    {
-        nick.append(current_char);
-        current_char = payload[++i];
-    }
-    current_char = payload[++i];
-    while (i<size && current_char != 0)
-    {
 
-        ack.append(current_char);
-        current_char = payload[++i];
-    }
+    char *cursor = payload;
+    nick = getArg(cursor);
+    cursor+=nick.size()+1;
+    ack = getArg(cursor);
     nick_ = nick;
     ack_ = ack == "true"? true : false;
 }

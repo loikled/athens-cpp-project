@@ -51,6 +51,8 @@ public:
     void setHeader(QDataStream& stream);
     void setHeader(message_header_t h);
     bool checkHeader();
+
+    QString getArg(char *ptr);//gets a null terminated string and moves the pointer
     /* source : http://en.wikipedia.org/wiki/Fletcher%27s_checksum */
     inline  quint16 fletcher16(quint8* data, int count) {
         qint16 sum1 = 0;
@@ -62,6 +64,7 @@ public:
         }
         return (sum2 << 8) | sum1;
     }
+
 };
 
 #endif // PACKET_H
