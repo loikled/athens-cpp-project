@@ -8,6 +8,7 @@ PacketJoin:: PacketJoin(const QString& channel)
 
 const char * PacketJoin::getPayload()
 {
+    //get data aligned on bytes
     return channel_.toUtf8().constData();
 }
 

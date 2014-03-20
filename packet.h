@@ -30,7 +30,6 @@ public:
 
 protected:
     message_header_t header_;
-
     char* payload_; //message content
 
 public:

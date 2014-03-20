@@ -38,7 +38,7 @@ void MainWindow::init()
     vlayout->addWidget(chatView_);
 
     chatView_->setReadOnly(true);
-    chatView_->setStyleSheet("background: transparent url(background.jpg) no-repeat;");
+    chatView_->setStyleSheet("background: url(background.jpg) no-repeat;");
 
     QWidget *textzone = new QWidget();
     QHBoxLayout* hlayout = new QHBoxLayout;
@@ -90,7 +90,33 @@ void MainWindow::slotAddText(const QString& text)
 {
     if (chatView_)
     {
-        chatView_->append(text);
+        if (text.contains(":"))
+        {
+            chatView_->append("");
+            QStringList list = text.split(":");
+            QString name = list[0];
+            list.pop_front();
+            QString rest = list.join("");
+            chatView_->moveCursor( QTextCursor::End );
+            chatView_->moveCursor(QTextCursor::Down);
+            chatView_->moveCursor(QTextCursor::StartOfLine);
+            QTextCursor cursor( chatView_->textCursor() );
+
+            QTextCharFormat formatName;
+            formatName.setFontWeight( QFont::DemiBold );
+            formatName.setForeground( QBrush( QColor( "green" ) ) );
+
+            QTextCharFormat formatmsg;
+            formatmsg.setFontWeight(QFont::Normal);
+            formatmsg.setForeground(QBrush(QColor("black")));
+
+            cursor.setCharFormat( formatName );
+            cursor.insertText( name );
+            cursor.setCharFormat(formatmsg);
+            cursor.insertText(rest);
+        }
+        else
+            chatView_->append(text);
     }
 }
 
@@ -104,6 +130,7 @@ void MainWindow::slotSend(const QString& text)
         {
             protocolhandler_.sendMessage(string);
         }
+        buffer_.clear();
     }
 }
 
