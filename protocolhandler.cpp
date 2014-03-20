@@ -37,7 +37,7 @@ void ProtocolHandler::disconnectFromServer()
 
 void ProtocolHandler::sendMessage(const QString& mess)
 {
-    if (mess.contains("/nick"))
+    if (mess.startsWith("/nick"))
     {
         QStringList list = mess.split(" ");
         QString nick = list[1];
@@ -50,7 +50,7 @@ void ProtocolHandler::sendMessage(const QString& mess)
         sendPacket(pack);
         nickname_ = nick;
     }
-    else if (mess.contains("/join"))
+    else if (mess.startsWith("/join"))
     {
         QStringList list = mess.split(" ");
         QString channel = list[1];
@@ -66,12 +66,16 @@ void ProtocolHandler::sendMessage(const QString& mess)
     else if(mess.startsWith("/p"))
     {
         QStringList list = mess.split(" ");
-        QString dest = list[1];
-        list.pop_front();
-        list.pop_front();
-        QString message = list.join(" ");
-        PacketMessage pack(nickname_,dest,message);
-        sendPacket(pack);
+        if (list.size() >= 3)
+        {
+            QString dest = list[1];
+            list.pop_front();
+            list.pop_front();
+            QString message = list.join(" ");
+            qDebug()<<"Private msg from: "<<nickname_<<"to: "<<dest<<" "<<message;
+            PacketMessage pack(nickname_,dest,message);
+            sendPacket(pack);
+        }
     }
     else
     {

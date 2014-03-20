@@ -100,9 +100,10 @@ void MainWindow::slotSend(const QString& text)
         buffer_.append(text);
     if(connected_ && buffer_.size() > 0)
     {
-        QString firstmess = buffer_[0];
-        buffer_.pop_front();
-        protocolhandler_.sendMessage(firstmess);
+        foreach(QString string, buffer_)
+        {
+            protocolhandler_.sendMessage(string);
+        }
     }
 }
 
@@ -181,7 +182,8 @@ void MainWindow::slotAbout()
     about.setText(QCoreApplication::applicationName() + " v" + QCoreApplication::applicationVersion()
                    + " Author: Loik Le Devehat");
     QTextStream ss(&s);
-    ss<<"This application is a graphical user interface for the athens week c++ course project";
+    ss<<"This application is a graphical user interface for the athens week c++ course project\n";
+    ss<<"Gui made with Qt 5.2";
     about.setTextFormat(Qt::RichText);
     about.setInformativeText(s);
     about.setIcon(QMessageBox::Information);
