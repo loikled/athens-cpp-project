@@ -160,11 +160,14 @@ void ProtocolHandler::slotError(QAbstractSocket::SocketError e)
     switch (e)
     {
     case QAbstractSocket::RemoteHostClosedError:
-        qDebug()<<"Conenction reset by peer";
+        qDebug()<<"Connection reset by peer";
+        disconnectFromServer();
         connectToServer();
         break;
     default:
         qDebug()<<"Unknown socket error: "<<e;
+        disconnectFromServer();
+        connectToServer();
         break;
     }
 }

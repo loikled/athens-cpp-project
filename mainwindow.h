@@ -47,6 +47,7 @@ signals:
     void slotSettings();
     void slotConnected();
     void slotSend(const QString& text);
+    void slotContact();
 };
 
 #endif // MAINWINDOW_H

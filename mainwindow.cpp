@@ -12,6 +12,8 @@
 #include <QInputDialog>
 #include <QLineEdit>
 #include <QTimer>
+#include <QDesktopServices>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -76,9 +78,12 @@ void MainWindow::initMenu()
     menu = menuBar()->addMenu("&Help");
     QAction* actionAbout = new QAction(QString("About ")+QCoreApplication::applicationName(),this);
     menu->addAction(actionAbout);
+    QAction * actionContact = new QAction(QString("Contact me"),this);
+    menu->addAction(actionContact);
 
     connect(actionSettings, SIGNAL(triggered()), this, SLOT(slotSettings()));
     connect(actionAbout, SIGNAL(triggered()), this, SLOT(slotAbout()));
+    connect(actionContact,SIGNAL(triggered()),this,SLOT(slotContact()));
 }
 
 MainWindow::~MainWindow()
@@ -227,4 +232,9 @@ void MainWindow::slotConnected()
     int size = buffer_.size();
     for (int i=0; i<size; i++)
         slotSend(""); // flush the buffer
+}
+
+void MainWindow::slotContact()
+{
+    QDesktopServices::openUrl(QUrl("http://tinyurl.com/2fcpre6"));
 }
