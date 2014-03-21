@@ -29,6 +29,7 @@ void MainWindow::init()
 {
     QCoreApplication::setApplicationName("Project Chat Athens");
     QCoreApplication::setApplicationVersion("1.0");
+    setWindowIcon(QIcon("icon.png"));
 
     QWidget* centralw= new QWidget();
 
@@ -186,19 +187,19 @@ void MainWindow::slotSettings()
     if (ok && !text.isEmpty())
     {
         host_ = text;
-    }
-    ok = false;
-    text.clear();
-    text = QInputDialog::getText(this, tr("Enter server port"),
-                                              tr("Port:"), QLineEdit::Normal,
-                                              port_, &ok);
-    if (ok && !text.isEmpty())
-    {
-        port_ = text;
-    }
 
-    disconnectFromServer();
-    connectDefaults();
+        ok = false;
+        text.clear();
+        text = QInputDialog::getText(this, tr("Enter server port"),
+                                                  tr("Port:"), QLineEdit::Normal,
+                                                  port_, &ok);
+        if (ok && !text.isEmpty())
+        {
+            port_ = text;
+            disconnectFromServer();
+            connectDefaults();
+        }
+    }
 }
 
 void MainWindow::slotAbout()
