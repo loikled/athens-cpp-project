@@ -24,13 +24,10 @@ int PacketAckNick::payloadSize()
 
 void PacketAckNick::setPayload(char* payload)
 {
-    QString nick;
-    QString ack;
-
-    char *cursor = payload;
-    nick = getArg(cursor);
+    const char *cursor = payload;
+    QString nick = cursor;
     cursor+=nick.size()+1;
-    ack = getArg(cursor);
+    QString ack = cursor;
     nick_ = nick;
     ack_ = ack == "true"? true : false;
 }

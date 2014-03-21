@@ -38,7 +38,7 @@ void MainWindow::init()
     vlayout->addWidget(chatView_);
 
     chatView_->setReadOnly(true);
-    chatView_->setStyleSheet("background: url(background.jpg) no-repeat;");
+    chatView_->setStyleSheet("background: url(background.jpg) no-repeat bottom;");
 
     QWidget *textzone = new QWidget();
     QHBoxLayout* hlayout = new QHBoxLayout;
@@ -54,7 +54,6 @@ void MainWindow::init()
     centralw->setLayout(vlayout);
     setCentralWidget(centralw);
     connect(sendBtn_,SIGNAL(clicked()),this,SLOT(slotBtnSend()));
-    //sconnect(chatBox_,SIGNAL(signalNewText(const QString&)),this,SLOT(slotAddText(const QString&)));
     connect(chatBox_,SIGNAL(signalNewText(const QString&)),this,SLOT(slotSend(const QString&)));
     connect(this,SIGNAL(signalNewText(const QString&)),this,SLOT(slotAddText(const QString&)));
     connect(this, SIGNAL(signalNewText(const QString&)),this,SLOT(slotSend(const QString&)));

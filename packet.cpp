@@ -100,15 +100,3 @@ void Packet::build()
     header_.body_checksum = fletcher16((quint8*)getPayload(),payloadSize());
     header_.head_checksum = fletcher16((quint8*)&header_,12);
 }
-
-QString Packet::getArg(char *ptr)
-{
-    QString res;
-    char c = 1;
-    while(c != 0)
-    {
-        c = *ptr++;
-        res.append(c);
-    }
-    return res;
-}

@@ -43,10 +43,13 @@ void ProtocolHandler::sendMessage(const QString& mess)
         QString nick = list[1];
         qDebug()<<"nick: "<<nick;
         PacketNick pack(nick);
+
+        //test serialize in stream
         QByteArray array;
         QDataStream stream (&array, QIODevice::WriteOnly);
         stream<<pack;
         qDebug()<<"raw Packet: "<<array;
+
         sendPacket(pack);
         nickname_ = nick;
     }
@@ -56,10 +59,13 @@ void ProtocolHandler::sendMessage(const QString& mess)
         QString channel = list[1];
         qDebug()<<"channel: "<<channel;
         PacketJoin pack(channel);
+
+        //test serialize in stream
         QByteArray array;
         QDataStream stream (&array, QIODevice::WriteOnly);
         stream<<pack;
         qDebug()<<"raw Packet: "<<array;
+
         sendPacket(pack);
         currentChan_ = channel;
     }
