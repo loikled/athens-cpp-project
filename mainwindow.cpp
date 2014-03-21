@@ -96,7 +96,7 @@ void MainWindow::slotAddText(const QString& text)
             QStringList list = text.split(":");
             QString name = list[0];
             list.pop_front();
-            QString rest = list.join("");
+            QString rest = list.join(":");
             chatView_->moveCursor( QTextCursor::End );
             chatView_->moveCursor(QTextCursor::Down);
             chatView_->moveCursor(QTextCursor::StartOfLine);
