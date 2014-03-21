@@ -15,6 +15,10 @@ ProtocolHandler::ProtocolHandler(QObject *parent) :
 {
     connect(&sock_,SIGNAL(connected()),this,SLOT(slotConnected()));
     connect(&timer_, SIGNAL(timeout()),this, SLOT(slotRead()));
+    connect(&sock_,
+            SIGNAL(error(QAbstractSocket::SocketError)),
+            this,
+            SLOT(slotError(QAbstractSocket::SocketError)));
     timer_.start(100);
     inBuf_.clear();
 }
@@ -148,5 +152,19 @@ void ProtocolHandler::slotRead()
         default:
            break;
        }
+    }
+}
+
+void ProtocolHandler::slotError(QAbstractSocket::SocketError e)
+{
+    switch (e)
+    {
+    case QAbstractSocket::RemoteHostClosedError:
+        qDebug()<<"Conenction reset by peer";
+        connectToServer();
+        break;
+    default:
+        qDebug()<<"Unknown socket error: "<<e;
+        break;
     }
 }

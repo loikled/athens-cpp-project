@@ -39,6 +39,7 @@ signals:
 public slots:
     void slotConnected();
     void slotRead();
+    void slotError(QAbstractSocket::SocketError e);
 
 };
 
